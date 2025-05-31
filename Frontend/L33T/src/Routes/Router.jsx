@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 import Home from "../Pages/Home";
 import SignupForm from "../components/SignupForm";
+import DashBoard from "../Pages/Dashboard"
 // import FeaturesPage from "../pages/FeaturesPage";
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
@@ -63,10 +64,10 @@ const router = createBrowserRouter([
   },
 
   //   // Optional: Dashboard Routes
-  //   {
-  //     path: "/student-dashboard",
-  //     element: <StudentDashboard />,
-  //   },
+    {
+      path: "/dashboard",
+      element: <DashBoard />,
+    },
   //   {
   //     path: "/mentor-dashboard",
   //     element: <MentorDashboard />,
