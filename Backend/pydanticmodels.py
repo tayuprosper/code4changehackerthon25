@@ -24,7 +24,7 @@ class UserOut(UserBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Learner Profile ===
@@ -40,7 +40,7 @@ class LearnerProfileOut(LearnerProfileBase):
     user: UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Token(BaseModel):
@@ -61,7 +61,7 @@ class TutorProfileOut(TutorProfileBase):
     user: UserOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Course ===
@@ -77,7 +77,7 @@ class CourseOut(CourseBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Enrollment ===
@@ -94,7 +94,7 @@ class EnrollmentOut(EnrollmentBase):
     course: CourseOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Internship ===
@@ -111,7 +111,7 @@ class InternshipOut(InternshipBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Application ===
@@ -125,7 +125,7 @@ class ApplicationOut(BaseModel):
     applied_on: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Mentorship Request ===
@@ -140,4 +140,4 @@ class MentorshipRequestOut(BaseModel):
     tutor: TutorProfileOut
 
     class Config:
-        orm_mode = True
+        from_attributes = True
