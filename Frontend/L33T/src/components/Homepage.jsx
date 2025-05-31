@@ -1,7 +1,8 @@
 import React from "react";
-import Navbar from "../Layouts/Navbar";
+import Navbar from "../Layouts/NavBar";
 import HeroBanner from "./HeroBanner";
 import AboutUsSection from "./AboutUsSection";
+import ListingsSection from "./ListingsSection";
 
 const Homepage = () => {
   return (
@@ -21,7 +22,7 @@ const Homepage = () => {
 
       {/* Add more sections with consistent spacing */}
       <div className="px-4 py-16 bg-gray-50">
-        {/* Future sections can go here */}
+        <ListingsSection />
       </div>
     </div>
   );
