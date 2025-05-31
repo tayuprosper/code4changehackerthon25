@@ -27,16 +27,19 @@ api_url = "https://api.pay.staging.mynkwa.com/"
 # config for CORSMiddleware
 #-----------------------------------
 origins = [
-   ["*"]   # optional
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:5174/",
+    "http://localhost:5174/",
+    "http://localhost:5174",
+["*"],
 ]
 
-# Enable CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # use ["*"] only in dev if needed
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers =["*"],
 )
 # --------------------
 # User Routes
@@ -46,7 +49,7 @@ def create_user(user: pydanticmodels.UserCreate, db: Session = Depends(database.
     if db.query(models.User).filter(models.User.email == user.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_pw = auth.get_password_hash(user.password)
-    db_user = models.User(email=user.email, password=hashed_pw, name=user.name, role=user.role)
+    db_user = models.User(email=user.email, password=hashed_pw, name=user.name, role=user.role, balance = 0)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
