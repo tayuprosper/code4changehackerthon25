@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../Layouts/NavBar";
+import Navbar from "../Layouts/Navbar";
 import HeroBanner from "./HeroBanner";
 import AboutUsSection from "./AboutUsSection";
 

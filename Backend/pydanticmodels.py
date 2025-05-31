@@ -1,8 +1,15 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from typing import Optional, List,Annotated
 from datetime import datetime
 from enum import Enum
+from pydantic import BaseModel, Field, constr, PositiveInt
+from typing import Optional
 
+
+PhoneNumber = Annotated[
+    str,
+    Field(pattern=r"^237[0-9]{8,9}$", description="Phone number in MSISDN format with country code")
+]
 
 # === Enum ===
 class UserRole(str, Enum):
@@ -141,3 +148,19 @@ class MentorshipRequestOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+class PaymentRequest(BaseModel):
+    amount: PositiveInt = Field(..., description="Amount to be paid in XAF")
+    phoneNumber: PhoneNumber 
+    description: Optional[str] = Field(None, max_length=255, description="Optional payment description")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "amount": 1000,
+                "phoneNumber": "237600000000",
+                "description": "Refund for order #1234"
+            }
+        }
