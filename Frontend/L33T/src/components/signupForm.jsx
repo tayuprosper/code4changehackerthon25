@@ -8,7 +8,7 @@ import { signup } from "../api/auth"; // Import API functions
 
 // ✅ Define validation schema using Yup
 const schema = yup.object().shape({
-  fullname: yup
+  name: yup
     .string()
     .matches(
       /^[a-zA-Z'\s\-]{2,50}$/,
@@ -73,10 +73,10 @@ function SignupForm({ accountType }) {
             </label>
             <input
               type="text"
-              {...register("fullname")}
+              {...register("name")}
               placeholder="Enter your full name"
               className={`w-full border-b-2 py-1 px-1 outline-none ${
-                errors.fullname
+                errors.name
                   ? "border-red-500"
                   : "border-gray-300 focus:border-[#0B081D]"
               }`}
@@ -145,7 +145,7 @@ function SignupForm({ accountType }) {
                   : "border-gray-300 focus:border-[#0B081D]"
               }`}
             >
-              <option value="">Select a role</option>
+              <option value="role">Select a role</option>
               <option value="Tutor">Tutor</option>
               <option value="Learner">Learner</option>
               <option value="Organization">Organization</option>
