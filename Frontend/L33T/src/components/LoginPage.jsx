@@ -20,7 +20,7 @@ function LoginForm() {
       if (response) {
         setMessage("Login Successful!");
         localStorage.setItem("token", response.token); // Store token for authenticated requests
-        navigate("/profile"); //redirecting to ProfilePage
+        navigate("/employer-dashboard"); //redirecting to ProfilePage
       } else {
         setMessage("Login Failed. Invalid name or password.");
       }
@@ -42,7 +42,7 @@ function LoginForm() {
 
         <form className="mt-4 flex flex-col gap-4" onSubmit={handleLogin}>
           {/* Email Field */}
-          <label className="input validator flex items-center gap-2 mt-2 text-[#313340]">
+          <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
             <Mail className="w-5 h-5 text-[#365486]" />
             Email
           </label>
@@ -58,7 +58,7 @@ function LoginForm() {
 
           <div>
             {/* Password Field */}
-            <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D]">
+            <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
               <Lock className="w-5 h-5" />
               Password
             </label>
@@ -74,7 +74,7 @@ function LoginForm() {
             />
             <Link
               to="/passwordReset"
-              className="flex items-center mt-1 font-thin px-1 text-[#365486] text-sm hover:underline"
+              className="flex items-center mt-1 font-thin px-1 text-[#0B081D] text-sm hover:underline"
             >
               forgot password
             </Link>
@@ -85,7 +85,7 @@ function LoginForm() {
             <button
               type="submit"
               className="btn btn-primary font-bold px-6 py-1 bg-[#0B081D] text-white rounded-md hover:bg-[#000411] transition"
-              // onClick={getAllVendors}
+              
             >
               Login
             </button>

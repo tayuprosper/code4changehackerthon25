@@ -11,7 +11,7 @@ const schema = yup.object().shape({
   name: yup
     .string()
     .matches(
-      /^[a-zA-Z'\s\-]{2,50}$/,
+      /^[a-zA-Z'\s-]{2,50}$/,
       "Name must contain only letters, spaces, or hyphens."
     )
     .required("Full name is required."),
