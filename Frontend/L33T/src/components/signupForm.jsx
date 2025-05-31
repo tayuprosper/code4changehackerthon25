@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -16,6 +17,7 @@ const schema = yup.object().shape({
 });
 
 function SignupForm() {
+  // eslint-disable-next-line no-unused-vars
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
