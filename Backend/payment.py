@@ -1,31 +1,28 @@
 from nkwa_pay_sdk import Pay
 
 # Initialize client with your API key
-sdk = Pay(
-    api_key_auth="your_api_key",
-)
+# sdk = Pay(
+#     api_key_auth="your_api_key",
+# )
 
 # For sandbox environment
 sdk = Pay(
     api_key_auth="KavEM5mVdNt67Ryxt8cGr",
-    server_url="https://api.sandbox.pay.mynkwa.com",
 )
 
 
-def collect_payment(amount: int, phone:str, desc: str):
+async def collect_payment(amount: int, phone:str, desc: str):
     try:
-        response = sdk.collect.post(
-            request_body={
-                "amount": amount,  # Amount in XAF
-                "phoneNumber": phone,
-                "description": str
-            }
+        response = await sdk.payments.collect_async(
+                amount = amount,  # Amount in XAF
+                phone_number = "237600000000",
+                # description = desc
         )
         
-        return {response.payment.id}  # Use this ID to check payment status later
+        return {"status":"success", "p_id" : response.payment.id}  # Use this ID to check payment status later
 
     except Exception as e:
-        print(f"Error: {str(e)}")
+        return {"status": "Failed", "details": str(e)}
 
 async def disburse_payment():
     try:

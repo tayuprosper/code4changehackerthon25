@@ -8,6 +8,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
 import models, pydanticmodels, database, auth
+import payment
+from nkwa_pay_sdk import Pay
+
+pay = Pay(
+    api_key_auth="KavEM5mVdNt67Ryxt8cGr",
+    server_url="https://api.sandbox.pay.mynkwa.com",
+)
 
 # Create DB tables
 models.Base.metadata.create_all(bind=engine)
@@ -101,3 +108,18 @@ def enroll(enrollment: pydanticmodels.EnrollmentCreate, db: Session = Depends(ge
 @app.get("/learners/enrollments", response_model=list[pydanticmodels.EnrollmentOut])
 def get_enrollments(db: Session = Depends(get_db),current_user: models.User = Depends(auth.get_current_user)):
     return db.query(models.Enrollment).filter_by(learner_id=current_user.id).all()
+
+@app.put("/pay")
+async def pay_user(payment:pydanticmodels.PaymentRequest):
+        try:
+            response = await pay.payments.collect_async(
+                amount=payment.amount,
+                phone_number=payment.phoneNumber
+            )
+            
+            return {
+                "success": True,
+                "data": response
+            }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
