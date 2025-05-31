@@ -20,6 +20,7 @@ class User(Base):
     password = Column(String, nullable=False)
     name = Column(String)
     role = Column(Enum(UserRole), default=UserRole.learner)
+    balance = Column(Integer)
 
     learner_profile = relationship("LearnerProfile", back_populates="user", uselist=False)
     tutor_profile = relationship("TutorProfile", back_populates="user", uselist=False)

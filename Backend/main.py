@@ -14,6 +14,8 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="EduConnect API")
 
+#nkwa api
+api_url = "https://api.pay.staging.mynkwa.com/"
 #-----------------------------------
 # config for CORSMiddleware
 #-----------------------------------
