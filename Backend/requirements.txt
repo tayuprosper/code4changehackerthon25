@@ -6,7 +6,9 @@ charset-normalizer==3.4.2
 click==8.2.1
 cryptography==45.0.3
 DateTime==5.5
+dnspython==2.7.0
 ecdsa==0.19.1
+email_validator==2.2.0
 fastapi==0.115.12
 greenlet==3.2.2
 h11==0.16.0
@@ -23,6 +25,7 @@ pydantic==2.11.4
 pydantic_core==2.33.2
 PyJWT==2.10.1
 python-jose==3.4.0
+python-multipart==0.0.20
 pytz==2025.2
 requests==2.32.3
 rsa==4.9.1
