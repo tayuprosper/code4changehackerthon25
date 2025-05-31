@@ -12,8 +12,8 @@ import payment
 from nkwa_pay_sdk import Pay
 
 pay = Pay(
-    api_key_auth="KavEM5mVdNt67Ryxt8cGr",
-    server_url="https://api.sandbox.pay.mynkwa.com",
+    api_key_auth="KavEM5mVdNt67Ryxt8cGr"
+    # server_url="https://api.sandbox.pay.mynkwa.com",
 )
 
 # Create DB tables
@@ -114,7 +114,7 @@ async def pay_user(payment:pydanticmodels.PaymentRequest):
         try:
             response = await pay.payments.collect_async(
                 amount=payment.amount,
-                phone_number=payment.phoneNumber
+                phone_number= payment.phoneNumber,
             )
             
             return {
@@ -123,3 +123,15 @@ async def pay_user(payment:pydanticmodels.PaymentRequest):
             }
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/payment/{payment_id}")
+async def get_payment(payment_id: str):
+    try:
+        response = await pay.payments.get_async(id=payment_id)
+        return {
+            "success": True,
+            "data": response
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
