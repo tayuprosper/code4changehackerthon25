@@ -23,17 +23,23 @@ export async function signup(userData) {
 }
 
 // 🔑 Login (JWT Token Request)
-export async function login(credentials) {
+export async function login(email, password) {
   const response = await fetch(`${BASE_URL}/token`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(credentials),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" }, // ✅ Must be form data
+    body: new URLSearchParams({
+      username: email, // ✅ Must match FastAPI's OAuth2PasswordRequestForm fields
+      password: password,
+    }),
   });
 
   const data = await response.json();
+  console.log("Login Response:", data);
+
   if (!response.ok) throw new Error(data.detail || "Login failed");
   return data; // { access_token, token_type }
 }
+  
 
 // 👤 Get Current User (Protected Route)
 export async function getCurrentUser(token) {
