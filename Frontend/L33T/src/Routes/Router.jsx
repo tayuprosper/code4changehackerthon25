@@ -1,6 +1,7 @@
 // src/router/index.jsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import LoginPage from "../components/LoginPage"
 
 import Home from "../Pages/Home";
 import SignupForm from "../components/SignupForm";
@@ -53,10 +54,10 @@ const router = createBrowserRouter([
   //     path: "/contact",
   //     element: <ContactPage />,
   //   },
-  //   {
-  //     path: "/login",
-  //     element: <LoginPage />,
-  //   },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
   {
     path: "/signup",
     element: <SignupForm />,
@@ -75,10 +76,10 @@ const router = createBrowserRouter([
   //     path: "/employer-dashboard",
   //     element: <EmployerDashboard />,
   //   },
-  //   {
-  //     path: "/ngo-dashboard",
-  //     element: <NgoDashboard />,
-  //   },
+    {
+      path: "/ngo-dashboard",
+      element: <NgoDashboard />,
+    },
 ]);
 
 export function Router() {

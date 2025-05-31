@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { User, Mail, Lock, MoveLeft } from "lucide-react";
 import { signup } from "../api/auth"; // Import API functions
 
-// ✅ Define validation schema using Yup
+// Define validation schema using Yup
 const schema = yup.object().shape({
   name: yup
     .string()
@@ -42,7 +42,7 @@ function SignupForm({ accountType }) {
     resolver: yupResolver(schema),
   });
 
-  // Remove e.preventDefault() because react-hook-form already prevents default behavior
+    
   const handleSignup = async (formData) => {
     try {
       console.log("Submitting form data:", formData); // Debugging log
@@ -64,7 +64,6 @@ function SignupForm({ accountType }) {
           Create {accountType ? accountType : "Account"}
         </h2>
 
-        {/* ✅ Fix `onSubmit` to correctly pass form data */}
         <form onSubmit={handleSubmit(handleSignup)} className="space-y-6">
           {/* Full Name */}
           <div>
