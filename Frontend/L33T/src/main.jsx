@@ -5,6 +5,8 @@ import "./index.css"; // or Tailwind styles etc.
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Router />
+    <>
+      <Router />
+    </>
   </React.StrictMode>
 );
