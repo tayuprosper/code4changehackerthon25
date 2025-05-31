@@ -13,7 +13,7 @@ import SignupForm from "../components/signupForm";
 // import ContactPage from "../pages/ContactPage";
 
 // import LoginPage from "../pages/LoginPage";
-// import SignupPage from "../pages/SignupPage";
+import SignupPage from "../Pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
