@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import Home from "../Pages/Home";
-import SignupForm from "../components/SignupForm";
+// import SignupForm from "../components/SignupForm";
 // import FeaturesPage from "../pages/FeaturesPage";
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
   //   },
   {
     path: "/signup",
-    element: <SignupForm />,
+    element: <SignupPage />,
   },
 
   //   // Optional: Dashboard Routes
