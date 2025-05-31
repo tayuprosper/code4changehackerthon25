@@ -2,26 +2,38 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
-import { collectSignupInfo } from "../api/auth"
-import { Mail, Lock, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { User, Mail, Lock, MoveLeft } from "lucide-react";
+import { signup } from "../api/auth"; // Import API functions
 
-// Define Yup validation schema
+// ✅ Define validation schema using Yup
 const schema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
+  name: yup
+    .string()
+    .matches(
+      /^[a-zA-Z'\s\-]{2,50}$/,
+      "Name must contain only letters, spaces, or hyphens."
+    )
+    .required("Full name is required."),
+  email: yup
+    .string()
+    .email("Invalid email format.")
+    .required("Email is required."),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .min(
+      6,
+      "Password must be at least 6 characters and include lowercase and a number."
+    )
+    .matches(
+      /^(?=.*[a-z])(?=.*\d).{6,}$/,
+      "Password must include lowercase letters and numbers."
+    )
+    .required("Password is required."),
+  role: yup.string().required("Role selection is required."),
 });
 
-function SignupForm() {
-  // eslint-disable-next-line no-unused-vars
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
+function SignupForm({ accountType }) {
   const {
     register,
     handleSubmit,
@@ -30,95 +42,137 @@ function SignupForm() {
     resolver: yupResolver(schema),
   });
 
-//   const onSubmit = async (data) => {
-//     setErrorMessage("");
-//     setSuccessMessage("");
-//     setLoading(true);
-
-//     try {
-//       const response = await fetch("https://your-fastapi-backend.com/signup", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-
-//       const result = await response.json();
-
-//       if (!response.ok)
-//         throw new Error(result.detail || "Signup failed. Try again.");
-//       setSuccessMessage("Signup successful! You can now log in.");
-//     } catch (error) {
-//       setErrorMessage(error.message);
-//     } finally {
-//       setLoading(false);
-//     }
-    //   };
-    
-    const handleSignup = (formData) => {
-      collectSignupInfo(formData); // Just collects info, no DB submission
-        setSuccessMessage("signup info collected. No database subission yet.");
-    };
-
+  // Remove e.preventDefault() because react-hook-form already prevents default behavior
+  const handleSignup = async (formData) => {
+    try {
+      console.log("Submitting form data:", formData); // Debugging log
+      const response = await signup(formData);
+      console.log("Signup response:", response); // Debugging log
+      alert(response ? "Signup Successful!" : "Signup Failed.");
+    } catch (error) {
+      alert("Signup Error: " + error.message);
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center bg-[#F2F8F4] p-8 rounded-lg shadow-lg w-full max-w-md mx-auto">
-      <h2 className="text-xl font-semibold text-[#0B081D] mb-4">
-        Create an Account
-      </h2>
+    <div className="w-full h-screen flex justify-center items-center bg-[#efefe6]">
+      <Link to="/">
+        <MoveLeft className="absolute top-5 left-4 hover:shadow-lg hover:bg-white transition duration-500 " />
+      </Link>
+      <div className="card bg-white shadow-lg p-8 w-96 rounded-lg">
+        <h2 className="text-3xl font-bold text-center text-[#0B081D] mb-6">
+          Create {accountType ? accountType : "Account"}
+        </h2>
 
-
-      <form onSubmit={handleSubmit(handleSignup)} className="w-full">
-        
-        <div className="mb-4 flex items-center bg-white rounded-lg border border-[#0B081D] px-3 py-2">
-        {/* Name Input */}
-          <User className="text-[#0B081D] mr-2" />
-          <input
-            type="text"
-            placeholder="Your Name"
-            {...register("name")}
-            className="w-full outline-none text-[#0B081D]"
-          />
-        </div>
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-
-        {/* Email Input */}
-        <div className="mb-4 flex items-center bg-white rounded-lg border border-[#0B081D] px-3 py-2">
-          <Mail className="text-[#0B081D] mr-2" />
-          <input
-            type="email"
-            placeholder="Your Email"
-            {...register("email")}
-            className="w-full outline-none text-[#0B081D]"
-          />
-        </div>
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-
-        {/* Password Input */}
-        <div className="mb-4 flex items-center bg-white rounded-lg border border-[#0B081D] px-3 py-2">
-          <Lock className="text-[#0B081D] mr-2" />
-          <input
-            type="password"
-            placeholder="Password"
-            {...register("password")}
-            className="w-full outline-none text-[#0B081D]"
+        {/* ✅ Fix `onSubmit` to correctly pass form data */}
+        <form onSubmit={handleSubmit(handleSignup)} className="space-y-6">
+          {/* Full Name */}
+          <div>
+            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+              <User className="w-5 h-5" /> Full Name
+            </label>
+            <input
+              type="text"
+              {...register("name")}
+              placeholder="Enter your full name"
+              className={`w-full border-b-2 py-1 px-1 outline-none ${
+                errors.name
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-[#0B081D]"
+              }`}
             />
-        </div>
-        {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
-        )}
+            {errors.fullname && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.fullname.message}
+              </p>
+            )}
+          </div>
 
-        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        {successMessage && <p className="text-green-500">{successMessage}</p>}
+          {/* Email */}
+          <div>
+            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+              <Mail className="w-5 h-5" /> Email
+            </label>
+            <input
+              type="email"
+              {...register("email")}
+              placeholder="Enter your email"
+              className={`w-full border-b-2 py-1 px-1 outline-none ${
+                errors.email
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-[#0B081D]"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-[#0B081D] hover:bg-[#000411] text-[#F2F8F4] py-2 rounded-lg transition"
-          disabled={loading}
-        >
-          {loading ? "Signing Up..." : "Sign Up"}
-        </button>
-      </form>
+          {/* Password */}
+          <div>
+            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+              <Lock className="w-5 h-5" /> Password
+            </label>
+            <input
+              type="password"
+              {...register("password")}
+              placeholder="Enter a secure password"
+              className={`w-full border-b-2 py-1 px-1 outline-none ${
+                errors.password
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-[#0B081D]"
+              }`}
+            />
+            {errors.password && (
+              <p className="text-red-600 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          {/* Role Selection */}
+          <div>
+            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+              <User className="w-5 h-5" /> Role
+            </label>
+            <select
+              {...register("role")}
+              className={`w-full border-b-2 py-1 px-1 outline-none ${
+                errors.role
+                  ? "border-red-500"
+                  : "border-gray-300 focus:border-[#0B081D]"
+              }`}
+            >
+              <option value="role">Select a role</option>
+              <option value="Tutor">Tutor</option>
+              <option value="Learner">Learner</option>
+              <option value="Organization">Organization</option>
+            </select>
+            {errors.role && (
+              <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="btn btn-primary px-6 py-1 font-bold bg-[#0B081D] text-white rounded-sm hover:bg-[#000411] transition"
+            >
+              Sign up
+            </button>
+          </div>
+        </form>
+
+        <p className="mt-4 text-center text-[#0B081D]">
+          Already have an account?
+          <Link to="/login" className="text-[#1E40AF] hover:underline ml-1">
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
