@@ -27,16 +27,19 @@ api_url = "https://api.pay.staging.mynkwa.com/"
 # config for CORSMiddleware
 #-----------------------------------
 origins = [
-   ["*"]   # optional
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:5174/",
+    "http://localhost:5174/",
+    "http://localhost:5174",
+["*"],
 ]
 
-# Enable CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # use ["*"] only in dev if needed
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers =["*"],
 )
 # --------------------
 # User Routes
