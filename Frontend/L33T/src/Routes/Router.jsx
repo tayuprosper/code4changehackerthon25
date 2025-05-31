@@ -12,7 +12,7 @@ import Home from "../Pages/Home";
 // import ContactPage from "../pages/ContactPage";
 
 // import LoginPage from "../pages/LoginPage";
-// import SignupPage from "../pages/SignupPage";
+import SignupPage from "../Pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
@@ -56,10 +56,10 @@ const router = createBrowserRouter([
 //     path: "/login",
 //     element: <LoginPage />,
 //   },
-//   {
-//     path: "/signup",
-//     element: <SignupPage />,
-//   },
+  {
+    path: "/signup",
+    element: <SignupPage />,
+  },
 
 //   // Optional: Dashboard Routes
 //   {
