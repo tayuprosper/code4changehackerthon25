@@ -48,7 +48,7 @@ function SignupForm({ accountType }) {
       console.log("Submitting form data:", formData); // Debugging log
       const response = await signup(formData);
       console.log("Signup response:", response); // Debugging log
-      alert(response ? "Signup Successful!" : "Signup Failed.");
+      alert(response.json() ? "Signup Successful!" : "Signup Failed.");
     } catch (error) {
       alert("Signup Error: " + error.message);
     }
@@ -146,9 +146,9 @@ function SignupForm({ accountType }) {
               }`}
             >
               <option value="role">Select a role</option>
-              <option value="Tutor">Tutor</option>
-              <option value="Learner">Learner</option>
-              <option value="Organization">Organization</option>
+              <option value="tutor">Tutor</option>
+              <option value="learner">Learner</option>
+              <option value="organization">Organization</option>
             </select>
             {errors.role && (
               <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>

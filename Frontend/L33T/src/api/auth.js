@@ -15,7 +15,8 @@ export async function signup(userData) {
   });
 
   const data = await response.json();
-  if (!response.ok) throw new Error(data.detail || console.log("Signup Failed!"));
+  console.log(data);
+  // if (!response.ok) throw new Error(data.detail || console.log("Signup Failed!"));
     console.log(data);
     return data;
     
