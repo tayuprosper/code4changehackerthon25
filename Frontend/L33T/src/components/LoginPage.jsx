@@ -20,24 +20,8 @@ function LoginForm() {
       const role = localStorage.getItem("role");
       if (response) {
         setMessage("Login Successful!");
-        localStorage.setItem("token", response.token); // Store token for authenticated requests
-        localStorage.setItem("role", response.role);
-
-        switch (role) {
-          case "learner":
-            navigate("/employer_dashboard");
-            break;
-          case "tutor":
-            navigate("/employer_dashboard");
-            break;
-
-          case "organization":
-            navigate("/learnerDashboard");
-            break;
-
-          default:
-            navigate("/employer-dashboard"); //redirecting to ProfilePage
-        }
+        // localStorage.setItem("token", response.access_token); // Store token for authenticated requests
+        navigate("/dashboard"); //redirecting to ProfilePage
       } else {
         setMessage("Login Failed. Invalid name or password.");
       }
