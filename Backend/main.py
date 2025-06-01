@@ -205,36 +205,24 @@ async def process_payment(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     try:
-        # Initiate the payment
+        # 1. Call payment gateway
         response = await pay.payments.collect_async(
             amount=payment.amount,
             phone_number=payment.phone_number
         )
 
-        # Get course details
-        course = db.query(models.Course).get(payment.id)
+        # 2. Validate course existence
+        course = db.query(models.Course).get(payment.course_id)
         if not course:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Course not found"
             )
 
-        # Check if already enrolled
-        existing_enrollment = (
-            db.query(models.Enrollment)
-            .filter_by(user_id=current_user.id, course_id=payment.id)
-            .first()
-        )
-        if existing_enrollment:
-            raise HTTPException(
-                status_code=400,
-                detail="You are already enrolled in this course."
-            )
-
-        # Create payment record
+        # 3. Create payment record
         db_payment = models.Payment(
             user_id=current_user.id,
-            course_id=payment.id,
+            course_id=payment.course_id,
             amount=payment.amount,
             payment_method=payment.payment_method,
             phone_number=payment.phone_number,
@@ -243,18 +231,18 @@ async def process_payment(
         )
         db.add(db_payment)
 
-        # Enroll the user in the course
+        # 4. Enroll user into course (if you have enrollment table)
         enrollment = models.Enrollment(
             user_id=current_user.id,
-            course_id=payment.id
+            course_id=payment.course_id
         )
         db.add(enrollment)
 
-        # Update tutor balance
-        receiver = db.query(models.User).get(course.poster_id)
-        if receiver:
+        # 5. Pay tutor (95%)
+        tutor = db.query(models.User).get(course.poster_id)
+        if tutor:
             net_amount = round(payment.amount * 0.95, 2)
-            receiver.balance = (receiver.balance or 0) + net_amount
+            tutor.balance = (tutor.balance or 0) + net_amount
 
         db.commit()
         db.refresh(db_payment)
@@ -262,9 +250,8 @@ async def process_payment(
         return db_payment
 
     except Exception as e:
-        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
-       
+     
    
 
 @app.get("/payments/{payment_id}", response_model=pydanticmodels.PaymentOut)
