@@ -19,7 +19,7 @@ app = FastAPI(
 
 # Initialize payment SDK
 pay = Pay(
-    api_key_auth="KavEM5mVdNt67Ryxt8cGr",
+    api_key_auth="jAbJqRJYIxy7Ggy42Khw4",
     server_url="https://api.pay.mynkwa.com"
 )
 
