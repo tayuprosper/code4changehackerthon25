@@ -145,8 +145,8 @@ function SignupForm({ accountType }) {
               }`}
             >
               <option value="role">Select a role</option>
-              <option value="tutor">Tutor</option>
               <option value="learner">Learner</option>
+              <option value="tutor">Tutor</option>
               <option value="organization">Organization</option>
             </select>
             {errors.role && (
