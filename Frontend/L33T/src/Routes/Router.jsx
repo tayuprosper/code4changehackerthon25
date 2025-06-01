@@ -12,7 +12,7 @@ import DashBoard from "../Pages/Dashboard"
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
 // import ProjectsPage from "../pages/ProjectsPage";
-// import CoursesPage from "../pages/CoursesPage";
+import CourseListing from "../Pages/CourseListing";
 // import GetMentorPage from "../pages/GetMentorPage";
 // import ContactPage from "../pages/ContactPage";
 
@@ -45,10 +45,10 @@ const router = createBrowserRouter([
 //     path: "/projects",
 //     element: <ProjectsPage />,
 //   },
-//   {
-//     path: "/courses",
-//     element: <CoursesPage />,
-//   },
+  {
+    path: "/courses",
+    element: <CourseListing />,
+  },
 //   {
 //     path: "/get-mentor",
 //     element: <GetMentorPage />,
