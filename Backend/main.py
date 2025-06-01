@@ -233,7 +233,7 @@ async def process_payment(
 
         # 4. Enroll user into course (if you have enrollment table)
         enrollment = models.Enrollment(
-            user_id=current_user.id,
+            learner_id=current_user.id,
             course_id=payment.course_id
         )
         db.add(enrollment)
