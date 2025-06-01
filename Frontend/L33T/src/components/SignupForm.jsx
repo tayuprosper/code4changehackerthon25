@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, MoveLeft } from "lucide-react";
-import { signup } from "../api/auth"; // Import API functions
+import { signup } from "../api/auth";
 
 // Define validation schema using Yup
 const schema = yup.object().shape({
@@ -21,10 +21,7 @@ const schema = yup.object().shape({
     .required("Email is required."),
   password: yup
     .string()
-    .min(
-      6,
-      "Password must be at least 6 characters and include lowercase and a number."
-    )
+    .min(6, "Password must be at least 6 characters.")
     .matches(
       /^(?=.*[a-z])(?=.*\d).{6,}$/,
       "Password must include lowercase letters and numbers."
@@ -42,64 +39,68 @@ function SignupForm({ accountType }) {
     resolver: yupResolver(schema),
   });
 
-    
   const handleSignup = async (formData) => {
     try {
-      console.log("Submitting form data:", formData); // Debugging log
-      const response = await signup(formData);
-      console.log("Signup response:", response); // Debugging log
-      alert(response.json() ? "Signup Successful!" : "Signup Failed.");
+      const sanitizedData = {
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        role: formData.role,
+      };
+      const response = await signup(sanitizedData);
+      const result = await response.json();
+      if (response.ok) {
+        alert("Signup Successful!");
+      } else {
+        throw new Error(result.message || "Signup failed.");
+      }
     } catch (error) {
       alert("Signup Error: " + error.message);
     }
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[#efefe6]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4">
       <Link to="/">
-        <MoveLeft className="absolute top-5 left-4 hover:shadow-lg hover:bg-white transition duration-500 " />
+        <MoveLeft className="absolute top-5 left-4 text-gray-600 hover:shadow-lg hover:bg-white rounded-full p-1 transition duration-500 w-8 h-8" />
       </Link>
-      <div className="card bg-white shadow-lg p-8 w-96 rounded-lg">
-        <h2 className="text-3xl font-bold text-center text-[#0B081D] mb-6">
+      <div className="w-full max-w-md bg-white shadow-2xl rounded-xl p-8 sm:p-10">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-blue-900 mb-6">
           Create {accountType ? accountType : "Account"}
         </h2>
 
         <form onSubmit={handleSubmit(handleSignup)} className="space-y-6">
           {/* Full Name */}
           <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+            <label className="flex items-center gap-2 text-blue-900 font-semibold">
               <User className="w-5 h-5" /> Full Name
             </label>
             <input
               type="text"
               {...register("name")}
               placeholder="Enter your full name"
-              className={`w-full border-b-2 py-1 px-1 outline-none ${
-                errors.name
-                  ? "border-red-500"
-                  : "border-gray-300 focus:border-[#0B081D]"
+              autoComplete="name"
+              className={`w-full border rounded-md py-2 px-3 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.name ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.fullname && (
-              <p className="text-red-600 text-sm mt-1">
-                {errors.fullname.message}
-              </p>
+            {errors.name && (
+              <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
             )}
           </div>
 
           {/* Email */}
           <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+            <label className="flex items-center gap-2 text-blue-900 font-semibold">
               <Mail className="w-5 h-5" /> Email
             </label>
             <input
               type="email"
               {...register("email")}
               placeholder="Enter your email"
-              className={`w-full border-b-2 py-1 px-1 outline-none ${
-                errors.email
-                  ? "border-red-500"
-                  : "border-gray-300 focus:border-[#0B081D]"
+              autoComplete="email"
+              className={`w-full border rounded-md py-2 px-3 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.email ? "border-red-500" : "border-gray-300"
               }`}
             />
             {errors.email && (
@@ -111,17 +112,16 @@ function SignupForm({ accountType }) {
 
           {/* Password */}
           <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+            <label className="flex items-center gap-2 text-blue-900 font-semibold">
               <Lock className="w-5 h-5" /> Password
             </label>
             <input
               type="password"
               {...register("password")}
               placeholder="Enter a secure password"
-              className={`w-full border-b-2 py-1 px-1 outline-none ${
-                errors.password
-                  ? "border-red-500"
-                  : "border-gray-300 focus:border-[#0B081D]"
+              autoComplete="new-password"
+              className={`w-full border rounded-md py-2 px-3 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.password ? "border-red-500" : "border-gray-300"
               }`}
             />
             {errors.password && (
@@ -133,15 +133,13 @@ function SignupForm({ accountType }) {
 
           {/* Role Selection */}
           <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-semibold">
+            <label className="flex items-center gap-2 text-blue-900 font-semibold">
               <User className="w-5 h-5" /> Role
             </label>
             <select
               {...register("role")}
-              className={`w-full border-b-2 py-1 px-1 outline-none ${
-                errors.role
-                  ? "border-red-500"
-                  : "border-gray-300 focus:border-[#0B081D]"
+              className={`w-full border rounded-md py-2 px-3 mt-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.role ? "border-red-500" : "border-gray-300"
               }`}
             >
               <option value="role">Select a role</option>
@@ -158,16 +156,19 @@ function SignupForm({ accountType }) {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="btn btn-primary px-6 py-1 font-bold bg-[#0B081D] text-white rounded-sm hover:bg-[#000411] transition"
+              className="w-full bg-blue-900 text-white py-2 px-6 rounded-md font-semibold hover:bg-blue-950 transition duration-300"
             >
               Sign up
             </button>
           </div>
         </form>
 
-        <p className="mt-4 text-center text-[#0B081D]">
+        <p className="mt-6 text-center text-sm text-blue-800">
           Already have an account?
-          <Link to="/login" className="text-[#1E40AF] hover:underline ml-1">
+          <Link
+            to="/login"
+            className="text-blue-700 font-semibold hover:underline ml-1"
+          >
             Login
           </Link>
         </p>

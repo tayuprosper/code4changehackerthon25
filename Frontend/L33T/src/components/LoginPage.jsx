@@ -17,7 +17,7 @@ function LoginForm() {
 
     try {
       const response = await login(email, password); // Call API function with user input
-      const role = localStorage.getItem("role");
+      // const role = localStorage.getItem("role");
       if (response) {
         setMessage("Login Successful!");
         navigate("/dashboard");
@@ -25,7 +25,7 @@ function LoginForm() {
         setMessage("Login Failed. Invalid email or password.");
       }
     } catch (error) {
-      console.error("Unexpected error:", error.message);
+      console.error("Login error:", error.message);
       setMessage("Something went wrong. Please try again.");
     }
   };
@@ -70,6 +70,7 @@ function LoginForm() {
               className="w-full p-2 border-b-2 border-gray-300 focus:border-blue-600 outline-none transition"
               required
               minLength={6}
+              autoComplete="current-password"
               pattern={passwordPattern.source}
               title="Must be at least 6 characters with at least one letter and one number"
               onChange={(e) => setPassword(e.target.value)}

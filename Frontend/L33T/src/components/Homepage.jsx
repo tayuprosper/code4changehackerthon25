@@ -1,8 +1,13 @@
 import React from "react";
-import Navbar from "../Layouts/Navbar";
+import Navbar from "../Layouts/NavBar";
 import HeroBanner from "./HeroBanner";
-import AboutUsSection from "./AboutUsSection";
-import ListingsSection from "./ListingsSection";
+import FeaturesSection from "./FeaturesSection";
+import CategoriesSection from "./Categories";
+import HowItWorks from "./HowItWorks";
+import Footer from "./Footer";
+import HomeInsights from "./HomeInsights";
+// import AboutUsSection from "./AboutUsSection";
+// import ListingsSection from "./ListingsSection";
 
 const Homepage = () => {
   return (
@@ -11,18 +16,33 @@ const Homepage = () => {
       <Navbar />
 
       {/* Hero Banner - Full width, seamless connection */}
-      <div className="w-full">
+      <div className="w-full p-2">
         <HeroBanner />
       </div>
 
       {/* About Us Section with proper spacing */}
-      <div className="px-4 py-16 max-w-7xl mx-auto">
-        <AboutUsSection />
+      <div className=" max-w-7xl  mt-3 mb-1 p-2">
+        {/* <AboutUsSection /> */}
+        <FeaturesSection />
       </div>
 
       {/* Add more sections with consistent spacing */}
-      <div className="px-4 py-16 bg-gray-50">
-        <ListingsSection />
+      <div className="p-2 bg-gray-50 mb-1 mt-3">
+        {/* <ListingsSection /> */}
+        <HowItWorks />
+      </div>
+
+      {/* Add more sections with consistent spacing */}
+      <div className="p-2 mt-3 mb-1 bg-gray-50">
+        {/* <ListingsSection /> */}
+        <HomeInsights />
+      </div>
+
+      <div className="p-2 mt-3 bg-gray-50">
+        {/* <ListingsSection /> */}
+        {/* <CallToAction /> */}
+        <Footer />
+    
       </div>
     </div>
   );
