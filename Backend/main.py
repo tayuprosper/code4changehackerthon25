@@ -224,7 +224,7 @@ async def process_payment(
             amount=payment.amount,
             payment_method=payment.payment_method,
             phone_number=payment.phone_number,
-            transaction_id=response.get("id"),
+            transaction_id=response.id,
             status="completed"
         )
         db.add(db_payment)
