@@ -13,89 +13,118 @@ function LoginForm() {
   const passwordPattern = /^(?=.*[a-z])(?=.*\d).{6,}$/;
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form reload
+    e.preventDefault();
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
+    if (
+      !emailPattern.test(trimmedEmail) ||
+      !passwordPattern.test(trimmedPassword)
+    ) {
+      setMessage("Invalid email or password format.");
+      return;
+    }
 
     try {
-      const response = await login(email, password); // Call API function with user input
-      if (response) {
-        setMessage("Login Successful!");
-        // localStorage.setItem("token", response.access_token); // Store token for authenticated requests
-        navigate("/dashboard"); //redirecting to ProfilePage
+      const response = await login(trimmedEmail, trimmedPassword);
+      if (response?.access_token) {
+        // Ideally, secure this token with httpOnly cookie in backend
+        // localStorage.setItem("token", response.access_token);
+        setMessage("");
+        navigate("/dashboard");
       } else {
-        setMessage("Login Failed. Invalid name or password.");
+        setMessage("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      console.error("Unexpected error:", error.message);
+      console.error("Login error:", error.message);
       setMessage("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[#efefe6]">
-      <Link to="/">
-        <MoveLeft className="absolute top-5 left-4 hover:shadow-lg hover:bg-white transition duration-500 " />
+    <div className="min-h-screen w-full bg-[#efefe6] flex items-center justify-center px-4 py-10">
+      {/* Back button */}
+      <Link to="/" className="absolute top-4 left-4">
+        <MoveLeft className="text-[#0B081D] w-6 h-6 hover:bg-white hover:shadow-md p-1 rounded-full transition" />
       </Link>
-      <div className="card bg-white shadow-lg p-6 w-96 rounded-lg">
-        <h2 className="text-3xl font-bold text-center text-[#0B081D] mb-6">
-          Login
+
+      {/* Login Card */}
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+        <h2 className="text-center text-3xl sm:text-4xl font-bold text-[#0B081D] mb-6">
+          Welcome Back
         </h2>
 
-        <form className="mt-4 flex flex-col gap-4" onSubmit={handleLogin}>
-          {/* Email Field */}
-          <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
-            <Mail className="w-5 h-5 text-[#365486]" />
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="Email"
-            className="input input-bordered border-b-2 border-gray-300 focus:border-[#365486] outline-none w-full"
-            required
-            pattern={emailPattern.source}
-            title="Please enter a valid email address"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
+        <form onSubmit={handleLogin} className="space-y-6">
+          {/* Email */}
           <div>
-            {/* Password Field */}
-            <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
-              <Lock className="w-5 h-5" />
+            <label className="flex items-center gap-2 text-[#0B081D] font-medium mb-1 text-sm sm:text-base">
+              <Mail className="w-5 h-5 text-[#365486]" />
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              pattern={emailPattern.source}
+              title="Enter a valid email address"
+              className="w-full border-b-2 border-gray-300 focus:border-[#365486] text-[#0B081D] bg-transparent placeholder:text-gray-400 py-2 px-1 outline-none transition"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="flex items-center gap-2 text-[#0B081D] font-medium mb-1 text-sm sm:text-base">
+              <Lock className="w-5 h-5 text-[#0B081D]" />
               Password
             </label>
             <input
               type="password"
-              placeholder="Password"
-              className="input input-bordered border-b-2 border-gray-300 py-1 px-1 focus:border-[#0B081D] outline-none w-full"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
+              autoComplete="current-password"
               pattern={passwordPattern.source}
-              title="Must be at least 6 characters, include an uppercase letter, a lowercase letter, and a number"
-              onChange={(e) => setPassword(e.target.value)}
+              title="At least 6 characters with lowercase letters and numbers"
+              className="w-full border-b-2 border-gray-300 focus:border-[#365486] text-[#0B081D] bg-transparent placeholder:text-gray-400 py-2 px-1 outline-none transition"
             />
-            <Link
-              to="/passwordReset"
-              className="flex items-center mt-1 font-thin px-1 text-[#0B081D] text-sm hover:underline"
-            >
-              forgot password
-            </Link>
+            <div className="text-right mt-1">
+              <Link
+                to="/passwordReset"
+                className="text-xs text-[#365486] hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="mt-4 flex justify-center">
+          {/* Submit */}
+          <div className="flex justify-center">
             <button
               type="submit"
-              className="btn btn-primary font-bold px-6 py-1 bg-[#0B081D] text-white rounded-md hover:bg-[#000411] transition"
-              
+              className="w-full bg-[#0B081D] hover:bg-[#000411] text-white font-bold py-2 rounded-lg transition"
             >
-              Login
+              Log In
             </button>
           </div>
         </form>
 
-        <p className="text-center mb-2 text-red-400">{message}</p>
-        <p className="mt-6 text-center text-[#0B081D]">
-          New user?
-          <Link to="/signup" className="text-[#365486] hover:underline ml-1">
+        {/* Error/Success Message */}
+        {message && (
+          <p className="text-sm text-center text-red-500 mt-4">{message}</p>
+        )}
+
+        {/* Sign Up Prompt */}
+        <p className="text-center text-sm mt-6 text-[#0B081D]">
+          Don’t have an account?
+          <Link
+            to="/signup"
+            className="ml-1 text-[#365486] font-semibold hover:underline"
+          >
             Sign up
           </Link>
         </p>
