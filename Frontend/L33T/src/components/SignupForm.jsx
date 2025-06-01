@@ -142,9 +142,9 @@ function SignupForm({ accountType }) {
                 errors.role ? "border-red-500" : "border-gray-300"
               }`}
             >
-              <option value="">Select a role</option>
-              <option value="tutor">Tutor</option>
+              <option value="role">Select a role</option>
               <option value="learner">Learner</option>
+              <option value="tutor">Tutor</option>
               <option value="organization">Organization</option>
             </select>
             {errors.role && (

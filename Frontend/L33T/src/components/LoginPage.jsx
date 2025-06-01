@@ -14,26 +14,15 @@ function LoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const trimmedEmail = email.trim().toLowerCase();
-    const trimmedPassword = password.trim();
-
-    if (
-      !emailPattern.test(trimmedEmail) ||
-      !passwordPattern.test(trimmedPassword)
-    ) {
-      setMessage("Invalid email or password format.");
-      return;
-    }
 
     try {
-      const response = await login(trimmedEmail, trimmedPassword);
-      if (response?.access_token) {
-        // Ideally, secure this token with httpOnly cookie in backend
-        // localStorage.setItem("token", response.access_token);
-        setMessage("");
+      const response = await login(email, password); // Call API function with user input
+      const role = localStorage.getItem("role");
+      if (response) {
+        setMessage("Login Successful!");
         navigate("/dashboard");
       } else {
-        setMessage("Login failed. Please check your credentials.");
+        setMessage("Login Failed. Invalid email or password.");
       }
     } catch (error) {
       console.error("Login error:", error.message);
@@ -42,89 +31,76 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#efefe6] flex items-center justify-center px-4 py-10">
-      {/* Back button */}
-      <Link to="/" className="absolute top-4 left-4">
-        <MoveLeft className="text-[#0B081D] w-6 h-6 hover:bg-white hover:shadow-md p-1 rounded-full transition" />
+    <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+      <Link to="/">
+        <MoveLeft className="absolute top-5 left-4 text-blue-600 hover:bg-blue-50 p-2 rounded-full transition duration-300" size={32} />
       </Link>
-
-      {/* Login Card */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-        <h2 className="text-center text-3xl sm:text-4xl font-bold text-[#0B081D] mb-6">
-          Welcome Back
+      <div className="card bg-white shadow-md p-8 w-96 rounded-xl border border-gray-100">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Login
         </h2>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email */}
-          <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-medium mb-1 text-sm sm:text-base">
-              <Mail className="w-5 h-5 text-[#365486]" />
+        <form className="flex flex-col gap-5" onSubmit={handleLogin}>
+          {/* Email Field */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-gray-700 font-medium">
+              <Mail className="w-5 h-5 text-blue-600" />
               Email
             </label>
             <input
               type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full p-2 border-b-2 border-gray-300 focus:border-blue-600 outline-none transition"
               required
-              autoComplete="email"
               pattern={emailPattern.source}
-              title="Enter a valid email address"
-              className="w-full border-b-2 border-gray-300 focus:border-[#365486] text-[#0B081D] bg-transparent placeholder:text-gray-400 py-2 px-1 outline-none transition"
+              title="Please enter a valid email address"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="flex items-center gap-2 text-[#0B081D] font-medium mb-1 text-sm sm:text-base">
-              <Lock className="w-5 h-5 text-[#0B081D]" />
+          {/* Password Field */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-gray-700 font-medium">
+              <Lock className="w-5 h-5 text-blue-600" />
               Password
             </label>
             <input
               type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full p-2 border-b-2 border-gray-300 focus:border-blue-600 outline-none transition"
               required
               minLength={6}
               autoComplete="current-password"
               pattern={passwordPattern.source}
-              title="At least 6 characters with lowercase letters and numbers"
-              className="w-full border-b-2 border-gray-300 focus:border-[#365486] text-[#0B081D] bg-transparent placeholder:text-gray-400 py-2 px-1 outline-none transition"
+              title="Must be at least 6 characters with at least one letter and one number"
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <div className="text-right mt-1">
-              <Link
-                to="/passwordReset"
-                className="text-xs text-[#365486] hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
+            <Link
+              to="/passwordReset"
+              className="block text-right text-sm text-blue-600 hover:underline mt-1"
+            >
+              Forgot password?
+            </Link>
           </div>
 
-          {/* Submit */}
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="w-full bg-[#0B081D] hover:bg-[#000411] text-white font-bold py-2 rounded-lg transition"
-            >
-              Log In
-            </button>
-          </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition mt-4"
+          >
+            Login
+          </button>
         </form>
 
-        {/* Error/Success Message */}
         {message && (
-          <p className="text-sm text-center text-red-500 mt-4">{message}</p>
+          <p className={`text-center mt-4 ${message.includes("Successful") ? "text-green-600" : "text-red-600"}`}>
+            {message}
+          </p>
         )}
 
-        {/* Sign Up Prompt */}
-        <p className="text-center text-sm mt-6 text-[#0B081D]">
-          Don’t have an account?
-          <Link
-            to="/signup"
-            className="ml-1 text-[#365486] font-semibold hover:underline"
-          >
+        <p className="mt-6 text-center text-gray-600">
+          New user?{" "}
+          <Link to="/signup" className="text-blue-600 font-medium hover:underline">
             Sign up
           </Link>
         </p>

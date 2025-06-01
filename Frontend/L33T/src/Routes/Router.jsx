@@ -8,26 +8,31 @@ import LoginPage from "../components/LoginPage"
 import SignupPage from "../Pages/SignupPage"
 import StudentDashboard from "../components/StudentDashboard";
 import DashBoard from "../Pages/Dashboard"
+import TutorDashboard from "../components/TutorDashboard";
 // import FeaturesPage from "../pages/FeaturesPage";
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
 // import ProjectsPage from "../pages/ProjectsPage";
 import CourseListing from "../Pages/CourseListing";
+import CourseDetails from "../components/CourseDetails";
 // import GetMentorPage from "../pages/GetMentorPage";
 // import ContactPage from "../pages/ContactPage";
 
-// import LoginPage from "../pages/LoginPage";
+// import LoginPage from "../components/LoginPage";
 // import SignupPage from "../pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
-// import EmployerDashboard from "../dashboard/EmployerDashboard";
+import EmployerDashboard from "../components/TutorDashboard";
 // import NgoDashboard from "../dashboard/NgoDashboard";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },{
+    path: "/course/:id",
+    element: <CourseDetails/>
   },
 //   {
 //     path: "/features",
@@ -37,10 +42,10 @@ const router = createBrowserRouter([
 //     path: "/jobs",
 //     element: <JobsPage />,
 //   },
-//   {
-//     path: "/internships",
-//     element: <InternshipsPage />,
-//   },
+  {
+    path: "/tutor-dashboard",
+    element: <TutorDashboard />,
+  },
 //   {
 //     path: "/projects",
 //     element: <ProjectsPage />,
