@@ -1,31 +1,57 @@
 import React, { useState, useEffect } from 'react';
+import { Dialog } from '@headlessui/react';
 
-const CourseCard = ({ title, description, difficulty, id }) => {
-    return (
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-200">
-            <div>
-                <h2 className="font-bold text-lg mb-2 text-gray-800">{title || "Untitled Course"}</h2>
-                <div className="flex items-center mb-3">
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        difficulty === "Beginner" ? "bg-blue-100 text-blue-800" :
-                        difficulty === "Intermediate" ? "bg-blue-200 text-blue-800" :
-                        difficulty === "Advanced" ? "bg-blue-300 text-blue-900" :
-                        "bg-gray-100 text-gray-800"
-                    }`}>
-                        {difficulty || "Unknown Level"}
-                    </span>
-                </div>
-                <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                    {description || "No description available"}
-                </p>
-            </div>
-            <div className="mt-auto">
-                <button className="w-full bg-blue-600 text-white px-6 py-2 rounded font-medium hover:bg-blue-700 transition-colors duration-200 cursor-pointer">
-                    View Details
-                </button>
-            </div>
+const CourseCard = ({ 
+  title, 
+  description, 
+  difficulty, 
+  id, 
+  instructor,
+  onEnrollClick 
+}) => {
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-200">
+      <div>
+        <h2 className="font-bold text-lg mb-2 text-gray-800">{title || "Untitled Course"}</h2>
+        
+        <div className="flex justify-between items-start mb-3">
+          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+            difficulty === "Beginner" ? "bg-blue-100 text-blue-800" :
+            difficulty === "Intermediate" ? "bg-blue-200 text-blue-800" :
+            difficulty === "Advanced" ? "bg-blue-300 text-blue-900" :
+            "bg-gray-100 text-gray-800"
+          }`}>
+            {difficulty || "Unknown Level"}
+          </span>
+          
+          {instructor && (
+            <span className="text-xs text-gray-500">
+              Posted by: {instructor}
+            </span>
+          )}
         </div>
-    );
+        
+        <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+          {description || "No description available"}
+        </p>
+      </div>
+      
+      <div className="mt-auto flex space-x-2">
+        <button 
+          className="flex-1 bg-gray-100 text-gray-800 px-4 py-2 rounded font-medium hover:bg-gray-200 transition-colors duration-200"
+          onClick={() => console.log(`View details for ${id}`)} // Replace with your details navigation
+        >
+          Details
+        </button>
+        <button 
+          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors duration-200"
+          onClick={() => onEnrollClick(id)}
+        >
+          Enroll
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const CourseListing = () => {
@@ -33,6 +59,10 @@ const CourseListing = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('mtn');
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -65,11 +95,29 @@ const CourseListing = () => {
         fetchCourses();
     }, []);
 
+    const handleEnrollClick = (courseId) => {
+      const course = courses.find(c => c.id === courseId);
+      setSelectedCourse(course);
+      setIsModalOpen(true);
+    };
+
+    const handlePaymentSubmit = (e) => {
+      e.preventDefault();
+      // Here you would typically connect to your payment gateway
+      console.log(`Processing payment for course: ${selectedCourse.title}`);
+      console.log(`Phone: ${phoneNumber}, Method: ${paymentMethod}`);
+      // Close modal and reset form
+      setIsModalOpen(false);
+      setPhoneNumber('');
+      // You might want to add a success message here
+    };
+
     const filteredCourses = courses.filter(course => {
         const searchLower = searchTerm.toLowerCase();
         return (
             (course.title && course.title.toLowerCase().includes(searchLower)) ||
-            (course.description && course.description.toLowerCase().includes(searchLower))
+            (course.description && course.description.toLowerCase().includes(searchLower)) ||
+            (course.instructor && course.instructor.toLowerCase().includes(searchLower))
         );
     });
 
@@ -109,6 +157,81 @@ const CourseListing = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
+            {/* Payment Modal */}
+            <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
+                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                <div className="fixed inset-0 flex items-center justify-center p-4">
+                    <Dialog.Panel className="w-full max-w-md rounded-lg bg-white p-6">
+                        <Dialog.Title className="text-xl font-bold text-gray-800 mb-4">
+                            Enroll in {selectedCourse?.title}
+                        </Dialog.Title>
+                        
+                        <form onSubmit={handlePaymentSubmit}>
+                            <div className="mb-4">
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Mobile Money Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    required
+                                    placeholder="Enter your mobile number"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                />
+                            </div>
+                            
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Payment Method
+                                </label>
+                                <div className="flex space-x-4">
+                                    <label className="inline-flex items-center">
+                                        <input
+                                            type="radio"
+                                            className="form-radio text-blue-600"
+                                            name="paymentMethod"
+                                            value="mtn"
+                                            checked={paymentMethod === 'mtn'}
+                                            onChange={() => setPaymentMethod('mtn')}
+                                        />
+                                        <span className="ml-2">MTN Mobile Money</span>
+                                    </label>
+                                    <label className="inline-flex items-center">
+                                        <input
+                                            type="radio"
+                                            className="form-radio text-blue-600"
+                                            name="paymentMethod"
+                                            value="orange"
+                                            checked={paymentMethod === 'orange'}
+                                            onChange={() => setPaymentMethod('orange')}
+                                        />
+                                        <span className="ml-2">Orange Money</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div className="flex justify-end space-x-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                                >
+                                    Confirm Payment
+                                </button>
+                            </div>
+                        </form>
+                    </Dialog.Panel>
+                </div>
+            </Dialog>
+
             <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
                 <h2 className="text-3xl font-bold text-gray-800">
                     Available Courses
@@ -132,6 +255,8 @@ const CourseListing = () => {
                         description={course.description}
                         difficulty={course.difficulty}
                         id={course.id}
+                        instructor={course.instructor}
+                        onEnrollClick={handleEnrollClick}
                     />
                 ))}
                 

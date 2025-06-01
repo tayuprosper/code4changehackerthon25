@@ -279,7 +279,7 @@ const navigate = useNavigate()
             <div className="w-64 bg-[#0B081D] text-white p-4 flex flex-col">
                 <div className="mb-8 p-4">
                     <h1 className="text-xl font-bold">Student Portal</h1>
-                    <p className="text-sm text-gray-300">Welcome back, {userData?.full_name || userData?.username || "Student"}!</p>
+                    <p className="text-sm text-gray-300">Welcome back, {userData?.full_name || userData?.name || "Student"}!</p>
                 </div>
                 
                 <nav className="flex-1">
@@ -336,7 +336,7 @@ const navigate = useNavigate()
             <div className="flex-1 p-6">
                 <header className="mb-8">
                     <h1 className="text-3xl font-bold text-[#000411]">
-                        Welcome back, {userData?.full_name || userData?.username || "Student"}!
+                        Welcome back, {userData?.full_name || userData?.name || "Student"}!
                     </h1>
                     <p className="text-[#646C6F] text-lg">What would you like to do today?</p>
                 </header>
