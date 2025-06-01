@@ -207,7 +207,7 @@ async def process_payment(
     try:
         response = await pay.payments.collect_async(
             amount=payment.amount,
-            phone_number=payment.phoneNumber
+            phone_number=payment.phone_number
         )
          # Get course details
         course = db.query(models.Course).get(payment.course_id)
