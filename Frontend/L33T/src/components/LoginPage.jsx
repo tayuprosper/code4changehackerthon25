@@ -17,7 +17,7 @@ function LoginForm() {
 
     try {
       const response = await login(email, password); // Call API function with user input
-      const role = localStorage.getItem("role");
+      // const role = localStorage.getItem("role");
       if (response) {
         setMessage("Login Successful!");
         navigate("/dashboard");
