@@ -24,10 +24,13 @@ export async function signup(userData) {
 
 // 🔑 Login (JWT Token Request)
 export async function login(email, password) {
-  const response = await fetch(`${BASE_URL}/token`, {
+  const response = await fetch(`https://code4changehackerthon25.onrender.com/token`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ username: email, password }),
+    body: new URLSearchParams({ 
+      username: email, 
+      password: password 
+    }),
   });
 
   if (!response.ok) {
@@ -36,15 +39,24 @@ export async function login(email, password) {
   }
 
   const data = await response.json();
-  
-  // Save token and user data
+  console.log("Login API Response:", data); // Debug log
+
+  // Save the token and user data
   localStorage.setItem("token", data.access_token);
-  localStorage.setItem("uid", data.uid);  // Make sure this matches your API response
-  // localStorage.setItem("userData", JSON.stringify(data.user)); // Save entire user object if available
   
+  // Make sure these match your actual API response structure
+  if (data.user_id) {
+    localStorage.setItem("uid", data.user_id);
+  } else if (data.user?.id) {
+    localStorage.setItem("uid", data.user.id);
+  } else {
+    console.warn("No user ID found in login response");
+  }
+
   // Set token expiration (assuming expires_in is in seconds)
   if (data.expires_in) {
-    localStorage.setItem("token_expires", Date.now() + (data.expires_in * 1000));
+    const expiresAt = Date.now() + (data.expires_in * 1000);
+    localStorage.setItem("token_expires", expiresAt);
   }
 
   return data;

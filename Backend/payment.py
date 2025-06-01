@@ -7,6 +7,7 @@ from nkwa_pay_sdk import Pay
 
 # For sandbox environment
 sdk = Pay(
+    server_url="https://api.sandbox.pay.mynkwa.com",
     api_key_auth="KavEM5mVdNt67Ryxt8cGr",
 )
 

@@ -13,16 +13,16 @@ function LoginForm() {
   const passwordPattern = /^(?=.*[a-z])(?=.*\d).{6,}$/;
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form reload
+    e.preventDefault();
 
     try {
       const response = await login(email, password); // Call API function with user input
+      const role = localStorage.getItem("role");
       if (response) {
         setMessage("Login Successful!");
-        // localStorage.setItem("token", response.access_token); // Store token for authenticated requests
-        navigate("/dashboard"); //redirecting to ProfilePage
+        navigate("/dashboard");
       } else {
-        setMessage("Login Failed. Invalid name or password.");
+        setMessage("Login Failed. Invalid email or password.");
       }
     } catch (error) {
       console.error("Unexpected error:", error.message);
@@ -31,71 +31,75 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[#efefe6]">
+    <div className="w-full h-screen flex justify-center items-center bg-gray-50">
       <Link to="/">
-        <MoveLeft className="absolute top-5 left-4 hover:shadow-lg hover:bg-white transition duration-500 " />
+        <MoveLeft className="absolute top-5 left-4 text-blue-600 hover:bg-blue-50 p-2 rounded-full transition duration-300" size={32} />
       </Link>
-      <div className="card bg-white shadow-lg p-6 w-96 rounded-lg">
-        <h2 className="text-3xl font-bold text-center text-[#0B081D] mb-6">
+      <div className="card bg-white shadow-md p-8 w-96 rounded-xl border border-gray-100">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Login
         </h2>
 
-        <form className="mt-4 flex flex-col gap-4" onSubmit={handleLogin}>
+        <form className="flex flex-col gap-5" onSubmit={handleLogin}>
           {/* Email Field */}
-          <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
-            <Mail className="w-5 h-5 text-[#365486]" />
-            Email
-          </label>
-          <input
-            type="email"
-            placeholder="Email"
-            className="input input-bordered border-b-2 border-gray-300 focus:border-[#365486] outline-none w-full"
-            required
-            pattern={emailPattern.source}
-            title="Please enter a valid email address"
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-gray-700 font-medium">
+              <Mail className="w-5 h-5 text-blue-600" />
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full p-2 border-b-2 border-gray-300 focus:border-blue-600 outline-none transition"
+              required
+              pattern={emailPattern.source}
+              title="Please enter a valid email address"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-          <div>
-            {/* Password Field */}
-            <label className="input validator flex items-center gap-2 mt-2 text-[#0B081D] font-semibold">
-              <Lock className="w-5 h-5" />
+          {/* Password Field */}
+          <div className="space-y-1">
+            <label className="flex items-center gap-2 text-gray-700 font-medium">
+              <Lock className="w-5 h-5 text-blue-600" />
               Password
             </label>
             <input
               type="password"
-              placeholder="Password"
-              className="input input-bordered border-b-2 border-gray-300 py-1 px-1 focus:border-[#0B081D] outline-none w-full"
+              placeholder="Enter your password"
+              className="w-full p-2 border-b-2 border-gray-300 focus:border-blue-600 outline-none transition"
               required
               minLength={6}
               pattern={passwordPattern.source}
-              title="Must be at least 6 characters, include an uppercase letter, a lowercase letter, and a number"
+              title="Must be at least 6 characters with at least one letter and one number"
               onChange={(e) => setPassword(e.target.value)}
             />
             <Link
               to="/passwordReset"
-              className="flex items-center mt-1 font-thin px-1 text-[#0B081D] text-sm hover:underline"
+              className="block text-right text-sm text-blue-600 hover:underline mt-1"
             >
-              forgot password
+              Forgot password?
             </Link>
           </div>
 
           {/* Submit Button */}
-          <div className="mt-4 flex justify-center">
-            <button
-              type="submit"
-              className="btn btn-primary font-bold px-6 py-1 bg-[#0B081D] text-white rounded-md hover:bg-[#000411] transition"
-              
-            >
-              Login
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition mt-4"
+          >
+            Login
+          </button>
         </form>
 
-        <p className="text-center mb-2 text-red-400">{message}</p>
-        <p className="mt-6 text-center text-[#0B081D]">
-          New user?
-          <Link to="/signup" className="text-[#365486] hover:underline ml-1">
+        {message && (
+          <p className={`text-center mt-4 ${message.includes("Successful") ? "text-green-600" : "text-red-600"}`}>
+            {message}
+          </p>
+        )}
+
+        <p className="mt-6 text-center text-gray-600">
+          New user?{" "}
+          <Link to="/signup" className="text-blue-600 font-medium hover:underline">
             Sign up
           </Link>
         </p>

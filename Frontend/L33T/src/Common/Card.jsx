@@ -16,8 +16,7 @@ const Card = ({
       }}
     >
       <h3
-        className="text-xl font-semibold mb-3"
-        style={{ color: "#D0D9D4" }} // Light Primary Text
+        className="text-xl font-semibold mb-3 text-blue-600" // Changed to text-blue-600
       >
         {title}
       </h3>
@@ -30,7 +29,7 @@ const Card = ({
       <button
         className={
           buttonClass ||
-          "mt-auto px-4 py-2 rounded-xl bg-white text-black hover:bg-[#1b1533] hover:text-white transition-all duration-200 w-full font-medium"
+          "mt-auto px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 w-full font-medium"
         }
       >
         {buttonText}

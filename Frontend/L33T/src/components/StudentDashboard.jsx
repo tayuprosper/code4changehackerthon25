@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
     // ... (keep all existing state declarations)
@@ -9,76 +10,78 @@ export default function StudentDashboard() {
     const [enrolments, setEnrolments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-
+const navigate = useNavigate()
+    
+    
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                const token = localStorage.getItem("token");
-                const uid = localStorage.getItem("uid");
-                
-                if (!token || !uid) {
-                    throw new Error("Authentication required. Please login again.");
-                }
+  const fetchData = async () => {
+    
+      setLoading(true);
+      setError(null);
+    //   navigate = useNavigate();
+      const token = localStorage.getItem("token");
+      const uid = localStorage.getItem("uid");
+      
+      // Debug logs
+      console.log("Token from localStorage:", token);
+      console.log("UID from localStorage:", uid);
 
-                // Fetch user data
-                const userResponse = await fetch(
-                    `https://code4changehackerthon25.onrender.com/users/${uid}`,
-                    {
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
-                
-                if (!userResponse.ok) {
-                    // If unauthorized, clear storage and reload
-                    if (userResponse.status === 401) {
-                        localStorage.clear();
-                        window.location.reload();
-                        return;
-                    }
-                    throw new Error("Failed to fetch user data");
-                }
-                
-                const userData = await userResponse.json();
-                setUserData(userData);
+      if (!token) {
+            navigate("/login")
+            
+      }
 
-                // Fetch enrolments
-                const enrolmentsResponse = await fetch(
-                    "https://code4changehackerthon25.onrender.com/learners/enrollments",
-                    {
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
-                
-                if (!enrolmentsResponse.ok) throw new Error("Failed to fetch enrolments");
-                const enrolmentsData = await enrolmentsResponse.json();
-                setEnrolments(enrolmentsData);
+      // Fetch user data
+      const userResponse = await fetch(
+        `https://code4changehackerthon25.onrender.com/me`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      if (!userResponse.ok) {
+        if (userResponse.status === 401) {
+          localStorage.clear();
+          window.location.href = "/login";
+          return;
+        }
+        throw new Error(`Failed to fetch user data: ${userResponse.status}`);
+      }
+      
+      const userData = await userResponse.json();
+      if (userData.role == "tutor"){
+        localStorage.setItem("id", userData.id);
+        navigate("/tutor-dashboard")
+      }
+      console.log("User data response:", userData); // Debug log
+      setUserData(userData);
 
-            } catch (err) {
-                console.error("Dashboard error:", err);
-                setError(err.message);
-                
-                // If unauthorized, redirect to login
-                if (err.message.includes("401")) {
-                    localStorage.clear();
-                    window.location.href = "/login";
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
+      // Fetch enrolments
+      const enrolmentsResponse = await fetch(
+        `https://code4changehackerthon25.onrender.com/enrollments`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      if (!enrolmentsResponse.ok) {
+        throw new Error(`Failed to fetch enrolments: ${enrolmentsResponse.status}`);
+      }
+      
+      const enrolmentsData = await enrolmentsResponse.json();
+      console.log("Enrolments response:", enrolmentsData); // Debug log
+      setEnrolments(enrolmentsData);
+      setLoading(false);
+    }
 
-        fetchData();
-    }, []);
+  fetchData();
+}, []);
 
     const handleSubmitWorkClick = () => {
         setIsMenuOpen(true);
@@ -280,7 +283,7 @@ export default function StudentDashboard() {
             <div className="w-64 bg-[#0B081D] text-white p-4 flex flex-col">
                 <div className="mb-8 p-4">
                     <h1 className="text-xl font-bold">Student Portal</h1>
-                    <p className="text-sm text-gray-300">Welcome back, {userData?.full_name || userData?.username || "Student"}!</p>
+                    <p className="text-sm text-gray-300">Welcome back, {userData?.full_name || userData?.name || "Student"}!</p>
                 </div>
                 
                 <nav className="flex-1">
@@ -337,7 +340,7 @@ export default function StudentDashboard() {
             <div className="flex-1 p-6">
                 <header className="mb-8">
                     <h1 className="text-3xl font-bold text-[#000411]">
-                        Welcome back, {userData?.full_name || userData?.username || "Student"}!
+                        Welcome back, {userData?.full_name || userData?.name || "Student"}!
                     </h1>
                     <p className="text-[#646C6F] text-lg">What would you like to do today?</p>
                 </header>

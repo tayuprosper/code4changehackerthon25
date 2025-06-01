@@ -15,7 +15,7 @@ const aboutCards = [
   {
     title: "Innovation & Impact",
     description:
-      "Leveraging technology and creativity to transform how opportunities are discovered and accessed in Cameroon’s evolving job market.",
+      "Leveraging technology and creativity to transform how opportunities are discovered and accessed in Cameroon's evolving job market.",
   },
   {
     title: "Trusted Network",
@@ -27,15 +27,17 @@ const aboutCards = [
 const AboutUsSection = () => {
   return (
     <section className="max-w-6xl mx-auto px-6 py-16">
-      <h2
-        className="text-center text-[#D0D9D4] text-3xl font-bold mb-12 uppercase tracking-wide"
-        style={{ color: "#D0D9D4" }}
-      >
+      <h2 className="text-center text-3xl font-bold mb-12 uppercase tracking-wide text-blue-400">
         About Us
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
         {aboutCards.map(({ title, description }, index) => (
-          <Card key={index} title={title} description={description} />
+          <Card 
+            key={index} 
+            title={title} 
+            description={description}
+            accentColor="blue-400" // Assuming your Card component can accept this prop
+          />
         ))}
       </div>
     </section>
