@@ -18,7 +18,10 @@ app = FastAPI(
 )
 
 # Initialize payment SDK
-pay = Pay(api_key_auth="KavEM5mVdNt67Ryxt8cGr")
+pay = Pay(
+    api_key_auth="KavEM5mVdNt67Ryxt8cGr",
+    server_url="https://api.pay.mynkwa.com"
+)
 
 # CORS configuration
 app.add_middleware(
