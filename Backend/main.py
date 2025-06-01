@@ -212,7 +212,7 @@ async def process_payment(
         )
 
         # Get course details
-        course = db.query(models.Course).get(payment.course_id)
+        course = db.query(models.Course).get(payment.id)
         if not course:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -222,7 +222,7 @@ async def process_payment(
         # Check if already enrolled
         existing_enrollment = (
             db.query(models.Enrollment)
-            .filter_by(user_id=current_user.id, course_id=payment.course_id)
+            .filter_by(user_id=current_user.id, course_id=payment.id)
             .first()
         )
         if existing_enrollment:
@@ -234,7 +234,7 @@ async def process_payment(
         # Create payment record
         db_payment = models.Payment(
             user_id=current_user.id,
-            course_id=payment.course_id,
+            course_id=payment.id,
             amount=payment.amount,
             payment_method=payment.payment_method,
             phone_number=payment.phone_number,
@@ -246,7 +246,7 @@ async def process_payment(
         # Enroll the user in the course
         enrollment = models.Enrollment(
             user_id=current_user.id,
-            course_id=payment.course_id
+            course_id=payment.id
         )
         db.add(enrollment)
 
