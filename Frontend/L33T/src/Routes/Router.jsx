@@ -16,12 +16,12 @@ import CourseListing from "../Pages/CourseListing";
 // import GetMentorPage from "../pages/GetMentorPage";
 // import ContactPage from "../pages/ContactPage";
 
-// import LoginPage from "../pages/LoginPage";
+import LoginPage from "../components/LoginPage";
 // import SignupPage from "../pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
-// import EmployerDashboard from "../dashboard/EmployerDashboard";
+import EmployerDashboard from "../components/TutorDashboard";
 // import NgoDashboard from "../dashboard/NgoDashboard";
 
 const router = createBrowserRouter([
