@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
+import { useNavigate } from 'react-router-dom';
 
 const CourseCard = ({ 
   title, 
@@ -9,6 +10,8 @@ const CourseCard = ({
   instructor,
   onEnrollClick 
 }) => {
+  const navigate = useNavigate(); // 👈 Add this hook
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-200">
       <div>
@@ -39,7 +42,7 @@ const CourseCard = ({
       <div className="mt-auto flex space-x-2">
         <button 
           className="flex-1 bg-gray-100 text-gray-800 px-4 py-2 rounded font-medium hover:bg-gray-200 transition-colors duration-200"
-          onClick={() => console.log(`View details for ${id}`)} // Replace with your details navigation
+          onClick={() => navigate(`/course/${id}`)} // 👈 Route to course details
         >
           Details
         </button>
@@ -53,6 +56,7 @@ const CourseCard = ({
     </div>
   );
 };
+
 
 const CourseListing = () => {
     const [searchTerm, setSearchTerm] = useState('');

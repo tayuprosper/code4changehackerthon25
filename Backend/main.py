@@ -205,14 +205,11 @@ async def process_payment(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     try:
-        # Process payment with payment gateway
-        payment_response = await pay.payments.collect_async(
+        response = await pay.payments.collect_async(
             amount=payment.amount,
-            phone_number=payment.phone_number,
-            description=f"Payment for course {payment.course_id}"
+            phone_number=payment.phoneNumber
         )
-        
-        # Get course details
+         # Get course details
         course = db.query(models.Course).get(payment.course_id)
         if not course:
             raise HTTPException(
@@ -227,12 +224,12 @@ async def process_payment(
             amount=payment.amount,
             payment_method=payment.payment_method,
             phone_number=payment.phone_number,
-            transaction_id=payment_response.get("id"),
+            transaction_id=response.get("id"),
             status="completed"
         )
         db.add(db_payment)
-        
-        # Update receiver balance (95% of amount)
+    
+    # Update receiver balance (95% of amount)
         receiver = db.query(models.User).get(course.poster_id)
         if receiver:
             net_amount = round(payment.amount * 0.95, 2)
@@ -242,13 +239,10 @@ async def process_payment(
         db.refresh(db_payment)
         
         return db_payment
-        
     except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=500, detail=str(e))
+        
+   
 
 @app.get("/payments/{payment_id}", response_model=pydanticmodels.PaymentOut)
 async def get_payment(

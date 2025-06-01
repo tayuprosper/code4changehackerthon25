@@ -57,7 +57,7 @@ const navigate = useNavigate()
 
       // Fetch enrolments
       const enrolmentsResponse = await fetch(
-        `https://code4changehackerthon25.onrender.com/learners/enrollments`,
+        `https://code4changehackerthon25.onrender.com/enrollments`,
         {
           headers: {
             "Authorization": `Bearer ${token}`,

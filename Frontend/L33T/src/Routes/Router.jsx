@@ -13,10 +13,11 @@ import DashBoard from "../Pages/Dashboard"
 // import InternshipsPage from "../pages/InternshipsPage";
 // import ProjectsPage from "../pages/ProjectsPage";
 import CourseListing from "../Pages/CourseListing";
+import CourseDetails from "../components/CourseDetails";
 // import GetMentorPage from "../pages/GetMentorPage";
 // import ContactPage from "../pages/ContactPage";
 
-import LoginPage from "../components/LoginPage";
+// import LoginPage from "../components/LoginPage";
 // import SignupPage from "../pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
@@ -28,6 +29,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },{
+    path: "/course/:id",
+    element: <CourseDetails/>
   },
 //   {
 //     path: "/features",
