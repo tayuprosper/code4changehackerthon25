@@ -3,7 +3,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import Home from "../Pages/Home";
-import SignupForm from "../components/SignupForm";
+// import SignupForm from "../components/SignupForm";
+import LoginPage from "../components/LoginPage"
+import SignupPage from "../Pages/SignupPage"
+import StudentDashboard from "../components/StudentDashboard";
+import DashBoard from "../Pages/Dashboard"
 // import FeaturesPage from "../pages/FeaturesPage";
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
@@ -13,7 +17,7 @@ import SignupForm from "../components/SignupForm";
 // import ContactPage from "../pages/ContactPage";
 
 // import LoginPage from "../pages/LoginPage";
-import SignupPage from "../Pages/SignupPage";
+// import SignupPage from "../pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
@@ -25,48 +29,48 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
   },
-  //   {
-  //     path: "/features",
-  //     element: <FeaturesPage />,
-  //   },
-  //   {
-  //     path: "/jobs",
-  //     element: <JobsPage />,
-  //   },
-  //   {
-  //     path: "/internships",
-  //     element: <InternshipsPage />,
-  //   },
-  //   {
-  //     path: "/projects",
-  //     element: <ProjectsPage />,
-  //   },
-  //   {
-  //     path: "/courses",
-  //     element: <CoursesPage />,
-  //   },
-  //   {
-  //     path: "/get-mentor",
-  //     element: <GetMentorPage />,
-  //   },
-  //   {
-  //     path: "/contact",
-  //     element: <ContactPage />,
-  //   },
-  //   {
-  //     path: "/login",
-  //     element: <LoginPage />,
-  //   },
+//   {
+//     path: "/features",
+//     element: <FeaturesPage />,
+//   },
+//   {
+//     path: "/jobs",
+//     element: <JobsPage />,
+//   },
+//   {
+//     path: "/internships",
+//     element: <InternshipsPage />,
+//   },
+//   {
+//     path: "/projects",
+//     element: <ProjectsPage />,
+//   },
+//   {
+//     path: "/courses",
+//     element: <CoursesPage />,
+//   },
+//   {
+//     path: "/get-mentor",
+//     element: <GetMentorPage />,
+//   },
+//   {
+//     path: "/contact",
+//     element: <ContactPage />,
+//   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
   {
     path: "/signup",
-    element: <SignupForm />,
+    element: <SignupPage />,
   },
 
   //   // Optional: Dashboard Routes
-  //   {
-  //     path: "/student-dashboard",
-  //     element: <StudentDashboard />,
-  //   },
+    {
+      path: "/dashboard",
+      element: <DashBoard />,
+    },
   //   {
   //     path: "/mentor-dashboard",
   //     element: <MentorDashboard />,
@@ -79,6 +83,10 @@ const router = createBrowserRouter([
   //     path: "/ngo-dashboard",
   //     element: <NgoDashboard />,
   //   },
+  {
+    path: "/student-dashboard",
+    element : <StudentDashboard/>
+  }
 ]);
 
 export function Router() {
