@@ -17,30 +17,50 @@ export async function signup(userData) {
   const data = await response.json();
   console.log(data);
   // if (!response.ok) throw new Error(data.detail || console.log("Signup Failed!"));
-    console.log(data);
+    
     return data;
     
 }
 
 // 🔑 Login (JWT Token Request)
 export async function login(email, password) {
-  const response = await fetch(`${BASE_URL}/token`, {
+  const response = await fetch(`https://code4changehackerthon25.onrender.com/token`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }, // ✅ Must be form data
-    body: new URLSearchParams({
-      username: email, // ✅ Must match FastAPI's OAuth2PasswordRequestForm fields
-      password: password,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ 
+      username: email, 
+      password: password 
     }),
   });
 
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Login failed");
+  }
+
   const data = await response.json();
-  console.log("Login Response:", data);
+  console.log("Login API Response:", data); // Debug log
 
-  if (!response.ok) throw new Error(data.detail || "Login failed");
-  return data; // { access_token, token_type }
-}
+  // Save the token and user data
+  localStorage.setItem("token", data.access_token);
   
+  // Make sure these match your actual API response structure
+  if (data.user_id) {
+    localStorage.setItem("uid", data.user_id);
+  } else if (data.user?.id) {
+    localStorage.setItem("uid", data.user.id);
+  } else {
+    console.warn("No user ID found in login response");
+  }
 
+  // Set token expiration (assuming expires_in is in seconds)
+  if (data.expires_in) {
+    const expiresAt = Date.now() + (data.expires_in * 1000);
+    localStorage.setItem("token_expires", expiresAt);
+  }
+
+  return data;
+}
 // 👤 Get Current User (Protected Route)
 export async function getCurrentUser(token) {
   const response = await fetch(`${BASE_URL}/me`, {

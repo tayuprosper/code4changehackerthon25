@@ -2,22 +2,21 @@ import { Link, useLocation } from "react-router-dom";
 import { useState, useRef } from "react";
 import MboaConnectLogo from "../components/MboaConnectLogo";
 
-
 const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Features", path: "/features" },
+  { label: "HOME", path: "/" },
+  { label: "FEATURES", path: "/features" },
   {
-    label: "Listings",
+    label: "LISTINGS",
     dropdown: true,
     children: [
-      { label: "Jobs", path: "/jobs" },
-      { label: "Internships", path: "/internships" },
-      { label: "Projects", path: "/projects" },
-      { label: "Courses", path: "/courses" },
+      { label: "JOBS", path: "/jobs" },
+      { label: "INTERNSHIPS", path: "/internships" },
+      { label: "PROJECTS", path: "/projects" },
+      { label: "COURSES", path: "/courses" },
     ],
   },
-  { label: "Get Mentor", path: "/get-mentor" },
-  { label: "Contact", path: "/contact" },
+  { label: "GET MENTOR", path: "/get-mentor" },
+  { label: "CONTACT", path: "/contact" },
 ];
 
 export default function Navbar() {
@@ -28,16 +27,16 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="w-full h-16 px-6 py-3 bg-[#F2F8F4] border-b border-[#C8D3CD] flex items-center justify-between shadow-sm z-50">
+    <nav className="w-full h-20 px-8 py-4 bg-white border-b border-blue-100 flex items-center justify-between shadow-lg z-50">
       {/* Left: Logo */}
       <div className="flex items-center">
         <Link to="/">
-          < MboaConnectLogo />
+          <MboaConnectLogo />
         </Link>
       </div>
 
       {/* Center: Nav Items */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-10">
         {navItems.map((item, idx) =>
           item.dropdown ? (
             <div
@@ -47,8 +46,12 @@ export default function Navbar() {
               onMouseLeave={() => setShowDropdown(false)}
             >
               <button
-                onClick={() => setShowDropdown(true)}
-                className="text-sm font-medium text-[#646C6F] hover:text-[#0B081D]"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className={`text-base font-bold tracking-wide ${
+                  isActive(item.path)
+                    ? "text-blue-600"
+                    : "text-gray-700 hover:text-blue-600"
+                } transition-colors duration-200`}
               >
                 {item.label}
               </button>
@@ -56,18 +59,18 @@ export default function Navbar() {
               {showDropdown && (
                 <div
                   ref={dropdownRef}
-                  className="absolute top-8 left-0 z-50 bg-white border border-[#C8D3CD] shadow-md rounded-md w-48"
+                  className="absolute top-10 left-0 z-50 bg-white border border-blue-100 shadow-xl rounded-lg w-56 py-2"
                 >
                   {item.children.map((child, cIdx) => (
                     <Link
                       key={cIdx}
                       to={child.path}
-                      className={`block px-4 py-2 text-sm hover:bg-[#E1EFE6] ${
+                      className={`block px-5 py-3 text-sm font-semibold tracking-wide hover:bg-blue-50 transition-colors ${
                         isActive(child.path)
-                          ? "text-[#0B081D]"
-                          : "text-[#646C6F]"
+                          ? "text-blue-600"
+                          : "text-gray-700"
                       }`}
-                      onClick={() => setShowDropdown(false)} // close on click
+                      onClick={() => setShowDropdown(false)}
                     >
                       {child.label}
                     </Link>
@@ -79,11 +82,11 @@ export default function Navbar() {
             <Link
               key={idx}
               to={item.path}
-              className={`text-sm font-medium ${
+              className={`text-base font-bold tracking-wide ${
                 isActive(item.path)
-                  ? "text-[#0B081D] border-b-2 border-[#0B081D] pb-1"
-                  : "text-[#646C6F] hover:text-[#0B081D]"
-              }`}
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                  : "text-gray-700 hover:text-blue-600"
+              } transition-colors duration-200`}
             >
               {item.label}
             </Link>
@@ -92,15 +95,18 @@ export default function Navbar() {
       </div>
 
       {/* Right: Auth Buttons */}
-      <div className="flex items-center gap-4">
-        <Link to="/login" className="text-sm text-[#0B081D] hover:underline">
-          Login
+      <div className="flex items-center gap-6">
+        <Link
+          to="/login"
+          className="text-base font-bold text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+        >
+          LOGIN
         </Link>
         <Link
           to="/signup"
-          className="bg-[#0B081D] text-[#F2F8F4] px-4 py-2 rounded-md text-sm font-semibold hover:bg-[#000411] transition"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg text-base font-bold tracking-wide hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200"
         >
-          Sign Up
+          SIGN UP
         </Link>
       </div>
     </nav>
