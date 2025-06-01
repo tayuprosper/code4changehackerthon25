@@ -37,10 +37,15 @@ export async function login(email, password) {
 
   const data = await response.json();
   
-  // ✅ Save token synchronously
+  // Save token and user data
   localStorage.setItem("token", data.access_token);
-  localStorage.setItem("uid", data.uid);
-  localStorage.setItem("token_expires", Date.now() + ( 1000));
+  localStorage.setItem("uid", data.uid);  // Make sure this matches your API response
+  // localStorage.setItem("userData", JSON.stringify(data.user)); // Save entire user object if available
+  
+  // Set token expiration (assuming expires_in is in seconds)
+  if (data.expires_in) {
+    localStorage.setItem("token_expires", Date.now() + (data.expires_in * 1000));
+  }
 
   return data;
 }
