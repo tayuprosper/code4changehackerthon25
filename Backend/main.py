@@ -65,9 +65,9 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
         expires_delta=timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
 
-    uid = user.id
-    print(uid)
-    return {"access_token": access_token, "token_type": "bearer", "uid": uid}
+    # uid = user.id
+    # print(uid)
+    return {"access_token": access_token, "token_type": "bearer", "uid": user.id}
 
 # Protected Route: Get current user
 @app.get("/me", response_model=pydanticmodels.UserOut)
