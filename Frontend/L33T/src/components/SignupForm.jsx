@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { User, Mail, Lock, MoveLeft } from "lucide-react";
+
+import { useNavigate } from "react-router-dom";
 import { signup } from "../api/auth";
 
 // Define validation schema using Yup
@@ -31,6 +33,7 @@ const schema = yup.object().shape({
 });
 
 function SignupForm({ accountType }) {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -50,7 +53,7 @@ function SignupForm({ accountType }) {
       const response = await signup(sanitizedData);
       const result = await response.json();
       if (response.ok) {
-        alert("Signup Successful!");
+        navigate("/login");
       } else {
         throw new Error(result.message || "Signup failed.");
       }
