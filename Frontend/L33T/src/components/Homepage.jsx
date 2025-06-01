@@ -1,5 +1,5 @@
 import React from "react";
-import Nav
+import Navbar from "../Layouts/Navbar"
 import HeroBanner from "./HeroBanner";
 import FeaturesSection from "./FeaturesSection";
 import CategoriesSection from "./Categories";
