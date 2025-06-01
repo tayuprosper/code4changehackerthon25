@@ -17,10 +17,27 @@ function LoginForm() {
 
     try {
       const response = await login(email, password); // Call API function with user input
+      const role = localStorage.getItem("role");
       if (response) {
         setMessage("Login Successful!");
         localStorage.setItem("token", response.token); // Store token for authenticated requests
-        navigate("/employer-dashboard"); //redirecting to ProfilePage
+        localStorage.setItem("role", response.role);
+
+        switch (role) {
+          case "learner":
+            navigate("/employer_dashboard");
+            break;
+          case "tutor":
+            navigate("/employer_dashboard");
+            break;
+
+          case "organization":
+            navigate("/learnerDashboard");
+            break;
+
+          default:
+            navigate("/employer-dashboard"); //redirecting to ProfilePage
+        }
       } else {
         setMessage("Login Failed. Invalid name or password.");
       }

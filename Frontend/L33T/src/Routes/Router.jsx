@@ -11,12 +11,12 @@ import Home from "../Pages/Home";
 // import GetMentorPage from "../pages/GetMentorPage";
 // import ContactPage from "../pages/ContactPage";
 
-// import LoginPage from "../pages/LoginPage";
+import LoginPage from "../components/LoginPage";
 // import SignupPage from "../pages/SignupPage";
 
 // import StudentDashboard from "../dashboard/StudentDashboard";
 // import MentorDashboard from "../dashboard/MentorDashboard";
-// import EmployerDashboard from "../dashboard/EmployerDashboard";
+import EmployerDashboard from "../components/TutorDashboard";
 // import NgoDashboard from "../dashboard/NgoDashboard";
 
 const router = createBrowserRouter([
@@ -52,10 +52,10 @@ const router = createBrowserRouter([
 //     path: "/contact",
 //     element: <ContactPage />,
 //   },
-//   {
-//     path: "/login",
-//     element: <LoginPage />,
-//   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
 //   {
 //     path: "/signup",
 //     element: <SignupPage />,
@@ -70,10 +70,10 @@ const router = createBrowserRouter([
 //     path: "/mentor-dashboard",
 //     element: <MentorDashboard />,
 //   },
-//   {
-//     path: "/employer-dashboard",
-//     element: <EmployerDashboard />,
-//   },
+  {
+    path: "/employer-dashboard",
+    element: <EmployerDashboard />,
+  },
 //   {
 //     path: "/ngo-dashboard",
 //     element: <NgoDashboard />,
