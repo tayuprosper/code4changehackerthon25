@@ -52,6 +52,10 @@ const navigate = useNavigate()
       }
       
       const userData = await userResponse.json();
+      if (userData.role == "tutor"){
+        localStorage.setItem("id", userData.id);
+        navigate("/tutor-dashboard")
+      }
       console.log("User data response:", userData); // Debug log
       setUserData(userData);
 

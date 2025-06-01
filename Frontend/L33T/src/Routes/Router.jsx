@@ -8,6 +8,7 @@ import LoginPage from "../components/LoginPage"
 import SignupPage from "../Pages/SignupPage"
 import StudentDashboard from "../components/StudentDashboard";
 import DashBoard from "../Pages/Dashboard"
+import TutorDashboard from "../components/TutorDashboard";
 // import FeaturesPage from "../pages/FeaturesPage";
 // import JobsPage from "../pages/JobsPage";
 // import InternshipsPage from "../pages/InternshipsPage";
@@ -41,10 +42,10 @@ const router = createBrowserRouter([
 //     path: "/jobs",
 //     element: <JobsPage />,
 //   },
-//   {
-//     path: "/internships",
-//     element: <InternshipsPage />,
-//   },
+  {
+    path: "/tutor-dashboard",
+    element: <TutorDashboard />,
+  },
 //   {
 //     path: "/projects",
 //     element: <ProjectsPage />,

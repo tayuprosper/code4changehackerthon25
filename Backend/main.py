@@ -93,7 +93,7 @@ async def create_user(
 async def get_user(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.get_current_user)
+    # current_user: models.User = Depends(auth.get_current_user)
 ):
     user = db.query(models.User).get(user_id)
     if not user:
