@@ -205,18 +205,32 @@ async def process_payment(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     try:
+        # Initiate the payment
         response = await pay.payments.collect_async(
             amount=payment.amount,
             phone_number=payment.phone_number
         )
-         # Get course details
+
+        # Get course details
         course = db.query(models.Course).get(payment.course_id)
         if not course:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Course not found"
             )
-        
+
+        # Check if already enrolled
+        existing_enrollment = (
+            db.query(models.Enrollment)
+            .filter_by(user_id=current_user.id, course_id=payment.course_id)
+            .first()
+        )
+        if existing_enrollment:
+            raise HTTPException(
+                status_code=400,
+                detail="You are already enrolled in this course."
+            )
+
         # Create payment record
         db_payment = models.Payment(
             user_id=current_user.id,
@@ -228,20 +242,29 @@ async def process_payment(
             status="completed"
         )
         db.add(db_payment)
-    
-    # Update receiver balance (95% of amount)
+
+        # Enroll the user in the course
+        enrollment = models.Enrollment(
+            user_id=current_user.id,
+            course_id=payment.course_id
+        )
+        db.add(enrollment)
+
+        # Update tutor balance
         receiver = db.query(models.User).get(course.poster_id)
         if receiver:
             net_amount = round(payment.amount * 0.95, 2)
             receiver.balance = (receiver.balance or 0) + net_amount
-        
+
         db.commit()
         db.refresh(db_payment)
-        
+
         return db_payment
+
     except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
-        
+       
    
 
 @app.get("/payments/{payment_id}", response_model=pydanticmodels.PaymentOut)
