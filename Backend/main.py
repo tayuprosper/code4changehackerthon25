@@ -229,19 +229,21 @@ async def process_payment(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     try:
+        # 1. Call payment gateway
         response = await pay.payments.collect_async(
             amount=payment.amount,
             phone_number=payment.phone_number
         )
-         # Get course details
+
+        # 2. Validate course existence
         course = db.query(models.Course).get(payment.course_id)
         if not course:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Course not found"
             )
-        
-        # Create payment record
+
+        # 3. Create payment record
         db_payment = models.Payment(
             user_id=current_user.id,
             course_id=payment.course_id,
@@ -252,20 +254,28 @@ async def process_payment(
             status="completed"
         )
         db.add(db_payment)
-    
-    # Update receiver balance (95% of amount)
-        receiver = db.query(models.User).get(course.poster_id)
-        if receiver:
+
+        # 4. Enroll user into course (if you have enrollment table)
+        enrollment = models.Enrollment(
+            learner_id=current_user.id,
+            course_id=payment.course_id
+        )
+        db.add(enrollment)
+
+        # 5. Pay tutor (95%)
+        tutor = db.query(models.User).get(course.poster_id)
+        if tutor:
             net_amount = round(payment.amount * 0.95, 2)
-            receiver.balance = (receiver.balance or 0) + net_amount
-        
+            tutor.balance = (tutor.balance or 0) + net_amount
+
         db.commit()
         db.refresh(db_payment)
-        
+
         return db_payment
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-        
+     
    
 
 @app.get("/payments/{payment_id}", response_model=pydanticmodels.PaymentOut)

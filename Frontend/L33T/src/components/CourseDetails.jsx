@@ -12,6 +12,7 @@ const CourseDetails = () => {
   const [error, setError] = useState('');
   const [paying, setPaying] = useState(false);
 const token = localStorage.getItem("token");
+// navigate = useNavigate()
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -51,6 +52,7 @@ const token = localStorage.getItem("token");
 
       const data = await res.json();
       alert('Payment successful');
+      navigate("/student-dashboard")
       setIsModalOpen(false);
       setPhoneNumber('');
     } catch (err) {
