@@ -18,7 +18,10 @@ app = FastAPI(
 )
 
 # Initialize payment SDK
-pay = Pay(api_key_auth="KavEM5mVdNt67Ryxt8cGr")
+pay = Pay(
+    api_key_auth="jAbJqRJYIxy7Ggy42Khw4",
+    server_url="https://api.pay.mynkwa.com"
+ )
 
 # CORS configuration
 app.add_middleware(
@@ -127,13 +130,34 @@ async def create_course(
     db.refresh(db_course)
     return db_course
 
+from sqlalchemy.orm import Session
+from fastapi import Depends, APIRouter
+from sqlalchemy import not_
+
 @app.get("/courses/", response_model=list[pydanticmodels.CourseOut])
 async def list_courses(
     db: Session = Depends(get_db),
     skip: int = 0,
-    limit: int = 100
+    limit: int = 100,
+    current_user = Depends(auth.get_current_user)
 ):
-    return db.query(models.Course).offset(skip).limit(limit).all()
+    # Get IDs of courses the user is enrolled in
+    enrolled_course_ids = (
+        db.query(models.Enrollment.course_id)
+        .filter(models.Enrollment.learner == current_user)
+        .subquery()
+    )
+
+    # Return only courses the user is NOT enrolled in
+    courses = (
+        db.query(models.Course)
+        .filter(models.Course.id.not_in(enrolled_course_ids))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    return courses
 
 @app.get("/courses/{course_id}", response_model=pydanticmodels.CourseOut)
 async def get_course(

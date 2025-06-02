@@ -139,7 +139,7 @@ class EnrollmentCreate(BaseModel):
 
 class EnrollmentOut(EnrollmentBase):
     id: int
-    learner: LearnerProfileOut
+    # learner: UserOut
     course: CourseOut
     enrolled_at: datetime
     last_accessed: Optional[datetime] = None

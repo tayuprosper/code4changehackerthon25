@@ -18,6 +18,11 @@ class PaymentMethod(str, enum.Enum):
     orange_money = "orange_money"
     credit_card = "credit_card"
 
+#Enum for Enrolment status 
+class EnrollmentStatus(str, enum.Enum):
+    active = "active"
+    paused = "paused"
+
 # --- User ---
 class User(Base):
     __tablename__ = "users"
